@@ -2,10 +2,8 @@
 
 using namespace std;
 
-// Callback function type definition
 typedef int *(*SumCallback)(int **, int, int *);
 
-// Function to sum rows of the 2D array
 int *sumRows(int **array, int rows, int *rowSizes)
 {
     int *sums = new int[rows];
@@ -20,7 +18,6 @@ int *sumRows(int **array, int rows, int *rowSizes)
     return sums;
 }
 
-// Function to process 2D array with a callback
 int *processArray(int **array, int rows, int *rowSizes, SumCallback callback)
 {
     return callback(array, rows, rowSizes);
