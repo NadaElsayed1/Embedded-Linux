@@ -1,5 +1,3 @@
-
-```bash
 # Simple Calculator Application
 
 This is a simple calculator application implemented in C, capable of performing basic arithmetic operations (+, -, *, /) based on user input.
