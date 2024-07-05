@@ -114,6 +114,11 @@ Used to display information about command types.
 ![Image related to command files starting with c](s16.png)
 ![Image related to second command file](s18.png)
 
+or by using `type` command on a couple of commands I know exist like (cd, cp)
+
+![Image related to 3rd command file](s26.png)
+
+
 ---
 
 ## Q11) Using `man` command to find the command to read a file
