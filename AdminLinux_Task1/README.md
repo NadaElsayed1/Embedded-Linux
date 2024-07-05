@@ -133,3 +133,4 @@ Used to display information about command types.
 - **Searching for a Keyword**:
   ```bash
   apropos read
+ 
