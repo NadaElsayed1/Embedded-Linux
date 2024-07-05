@@ -49,3 +49,4 @@ To read the contents of a file (e.g., `lab1.cpp`), you can use one of the follow
 To read the entire content of `lab1.cpp`:
 ```bash
 cat lab1.cpp
+ 
