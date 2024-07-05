@@ -57,9 +57,9 @@ a) When I use the command `rmdir dirl/dirl1` it gives me "fail to remove directo
 	![Image related to rm -r command](s7.png)
 
 	To overcome this:
-	![Image related to rm -r command](s8.png)
    - By using this command `rm -r dirl/dirl1` I could remove the filled directories.
 
+	![Image related to rm -r command](s8.png)
 
 b) When I use this command `rmdir -p` it gives me "fail to remove directory not empty". To overcome this:
    - Starts from the root directory `/`
