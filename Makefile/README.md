@@ -92,4 +92,4 @@ Your equation:
     MATH ERROR!
 ```
 
-![Project Image](s26.png)
+![Project Image](01.png)
