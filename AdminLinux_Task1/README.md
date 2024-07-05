@@ -56,10 +56,10 @@ The `rmdir` command is used to remove empty directories.
 a) When I use the command `rmdir dirl/dirl1` it gives me "fail to remove directory not empty". 
 	![Image related to rm -r command](s7.png)
 
-	To overcome this:
+To overcome this:
    - By using this command `rm -r dirl/dirl1` I could remove the filled directories.
 
-	![Image related to rm -r command](s8.png)
+![Image related to overcome](s8.png)
 
 b) When I use this command `rmdir -p` it gives me "fail to remove directory not empty". To overcome this:
    - Starts from the root directory `/`
