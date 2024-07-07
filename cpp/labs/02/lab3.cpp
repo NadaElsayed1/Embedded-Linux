@@ -1,33 +1,34 @@
 #include <iostream>
+#include <utility>
 
 namespace ArrayPair
 {
-    std::pair<int*, int *> createArray(int s1, int s2)
+    std::pair<int, int>* createArray(int size)
     {
-        std::pair<int*, int *> array(new int[s1], new int[s2]);
+        std::pair<int, int>* array = new std::pair<int, int>[size];
         return array;
     }
 
-    void deleteArray(std::pair<int*, int *> array)
+    void deleteArray(std::pair<int, int>* array)
     {
-        delete[] array.first;
-        delete[] array.second;
+        delete[] array;
     }
 
-    void setPair(std::pair<int*, int *> array, int index, int value1,int value2)
+    void setPair(std::pair<int, int>* array, int index, int value1, int value2)
     {
-        array.first[index]=value1;
-        array.second[index]=value2;
+        array[index] = std::make_pair(value1, value2);
     }
-    std::pair<int, int> getPair(std::pair<int*, int *>array, int index)
+
+    std::pair<int, int> getPair(std::pair<int, int>* array, int index)
     {
-        return {array.first[index],array.second[index]};
+        return array[index];
     }
-    void print(std::pair<int*, int *>array, int size)
+
+    void print(std::pair<int, int>* array, int size)
     {
-        for(int i = 0; i < size ; i++)
+        for (int i = 0; i < size; i++)
         {
-            std::cout << "(" << array.first[i] << "," << array.second[i] << ")" << " ";
+            std::cout << "(" << array[i].first << "," << array[i].second << ") ";
         }
         std::cout << std::endl;
     }
@@ -36,16 +37,16 @@ namespace ArrayPair
 int main()
 {
     int size = 2;
-    auto arrayOfpairs = ArrayPair::createArray(size,size);
+    auto arrayOfPairs = ArrayPair::createArray(size);
 
     for (int i = 0; i < size; i++)
     {
-        ArrayPair::setPair(arrayOfpairs,i,i,i*2);
+        ArrayPair::setPair(arrayOfPairs, i, i, i * 2);
     }
-   
-    ArrayPair::print(arrayOfpairs,size);
 
-    ArrayPair::deleteArray(arrayOfpairs);
+    ArrayPair::print(arrayOfPairs, size);
+
+    ArrayPair::deleteArray(arrayOfPairs);
 
     return 0;
 }
