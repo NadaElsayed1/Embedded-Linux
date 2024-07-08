@@ -53,4 +53,3 @@ When a new terminal is opened, the `.bashrc` file is sourced, which means all th
 1. Set the environment variable `HELLO` to the value of the `HOSTNAME` environment variable.
 2. Set the local variable `LOCAL` to the username of the current user (output of the `whoami` command).
 3. Print the string `LOCAL=username` to the terminal, where `username` is the current user's username.
-```
