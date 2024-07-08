@@ -1,6 +1,3 @@
-Here's the revised `README.md` file content formatted professionally for GitHub:
-
-```markdown
 # Script Description
 
 This script modifies the `.bashrc` file to set environment variables and prints a local variable when a new terminal is opened. It also opens a new GNOME terminal.
