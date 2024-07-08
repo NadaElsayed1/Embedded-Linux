@@ -1,6 +1,6 @@
 #include <iostream>
 
-enum class ErrorCode : int
+enum class ErrorCode
 {
     Bad_Request,
     Not_Found,
