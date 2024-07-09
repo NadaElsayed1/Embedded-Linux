@@ -1,5 +1,3 @@
----
-
 # Commands and Shell Basics
 
 ### Q1) Script Description
@@ -155,5 +153,3 @@ source ~/.bashrc
 ### Q9) Additional Prompt Customization (PS1)
 
 For more information on shell prompt customization, refer to the usage of `PS1` and `PS2`.
-
----
