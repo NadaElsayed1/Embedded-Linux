@@ -10,7 +10,7 @@ This Bash script organizes files from a source directory into subdirectories bas
 ./organize_files.sh <source_directory>
 ```
 
-- `<source_directory>`: The directory containing the files you want to organize.
+- `<source_directory>`: The directory containing the files I want to organize.
 
 ## How It Works
 
@@ -86,10 +86,10 @@ This Bash script organizes files from a source directory into subdirectories bas
 - The script skips directories.
 - If a file doesn't have an extension, it is moved to the `others` directory.
 
-## Example
+## Running
 
-To organize files in `/home/user/downloads`, run:
+![File Organizer](01.png)
+![File Organizer](02.png)
+![File Organizer](03.png)
 
-```bash
-./organize_files.sh /home/user/downloads
-```
+
