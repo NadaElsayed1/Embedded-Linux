@@ -88,8 +88,7 @@ This Bash script organizes files from a source directory into subdirectories bas
 
 ## Running
 
-![File Organizer](01.png)
-![File Organizer](02.png)
-![File Organizer](03.png)
+![File Organizer](photo.png)
+
 
 
