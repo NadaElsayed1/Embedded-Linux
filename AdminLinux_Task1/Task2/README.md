@@ -45,6 +45,10 @@ The `vi` editor is a versatile and powerful text editor widely used in Unix-like
 
 The `vi` editor is known for its efficiency, allowing users to perform complex text manipulations with minimal keystrokes. It's especially useful for editing configuration files and programming scripts, making it a valuable tool for developers and system administrators.
 
+![Example Image](01.png)
+![Example Image](02.png)
+
+
 # Why the Binary Can Be Executed from Any Location
 
 ## PATH Environment Variable
@@ -64,6 +68,9 @@ Moving the binary to `/usr/local/bin` makes it accessible to all users and shell
 
 ## Execution from Any Directory
 When you type `my_program`, the shell searches directories in `PATH`, finds it in `/usr/local/bin`, and executes it.
+
+![Example Image](03.png)
+![Example Image](04.png)
 
 
 ## Part 2
