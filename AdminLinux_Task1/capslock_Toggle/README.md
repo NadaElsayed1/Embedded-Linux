@@ -49,3 +49,5 @@ This command will:
 1. Run `read_brightness` to read the current brightness value and print it to the standard output.
 2. Pipe the output of `read_brightness` to `toggle_brightness`.
 3. Run `toggle_brightness` to read the value from the standard input, toggle it, and write the new value back to the brightness file.
+
+![Example Image](01.png)
