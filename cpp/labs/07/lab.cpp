@@ -57,7 +57,7 @@ public:
 
     bool gameOver() const
     {
-        return guesses >= maxGuesses;
+        return (guesses >= maxGuesses);
     }
 
     int getGuesses() const
