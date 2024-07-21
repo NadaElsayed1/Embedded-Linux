@@ -49,13 +49,13 @@ getent group "$GROUP_NAME"
 
 - `getent`: getent stands for "get entries." It is a command used to query entries from various administrative databases configured in the /etc/nsswitch.conf file. These databases include:
 
-    passwd: User account information.
-    group: Group account information.
-    hosts: Host names and IP addresses.
-    services: Network services.
-    protocols: Network protocols.
-    networks: Network names and addresses.
-    ethers: Ethernet addresses.
+    - passwd: User account information.
+    - group: Group account information.
+    - hosts: Host names and IP addresses.
+    - services: Network services.
+    - protocols: Network protocols.
+    - networks: Network names and addresses.
+    - ethers: Ethernet addresses.
 so it allows me to query these databases to retrieve specific entries, based on that
 `getent group "$GROUP_NAME" >/dev/null`: Checks if the group exists. If it does, no output is produced; if not, it exits with a non-zero status.
 -`/dev/null`: is a special file in Unix-like operating systems that discards all data written to it. It is often referred to as the "null device" or "bit bucket." 
