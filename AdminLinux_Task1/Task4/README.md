@@ -56,15 +56,18 @@ getent group "$GROUP_NAME"
     - protocols: Network protocols.
     - networks: Network names and addresses.
     - ethers: Ethernet addresses.
+
 so it allows me to query these databases to retrieve specific entries, based on that
+
 `getent group "$GROUP_NAME" >/dev/null`: Checks if the group exists. If it does, no output is produced; if not, it exits with a non-zero status.
--`/dev/null`: is a special file in Unix-like operating systems that discards all data written to it. It is often referred to as the "null device" or "bit bucket." 
+
+- `/dev/null`: is a special file in Unix-like operating systems that discards all data written to it. It is often referred to as the "null device" or "bit bucket." 
 so this special file that discards all data written to it, often used to suppress command output.
-- Redirection operators:
-  - `>`: Redirects standard output (stdout) to a file or device.
-  - `2>`: Redirects standard error (stderr) to a file or device.
-  - `&>`: Redirects both stdout and stderr to a file or device.
-- How it works: (e.g. `id "$USER_NAME" &>/dev/null`) Checks if the user exists. If it does, the command produces no output; if not, it exits with a non-zero status.
+    - Redirection operators:
+        - `>`: Redirects standard output (stdout) to a file or device.
+        - `2>`: Redirects standard error (stderr) to a file or device.
+        - `&>`: Redirects both stdout and stderr to a file or device.
+    - How it works: (e.g. `id "$USER_NAME" &>/dev/null`) Checks if the user exists. If it  does, the command produces no output; if not, it exits with a non-zero status.
 
 ## Creating a Secondary Group
 
