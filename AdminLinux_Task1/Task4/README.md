@@ -161,21 +161,4 @@ sudo adduser yourName --ingroup FamilyName
 
 ## Running
 
-To run the scripts, make sure they have executable permissions. For example:
-
-```bash
-chmod +x adduser.sh
-./adduser.sh
-```
-
-## Adding a Picture
-
-To add a picture to this README, use the following markdown syntax:
-
-```markdown
-![Description of Image](path/to/image.png)
-```
-
-For example, if I have an image named `01.png` in the same directory as this README file, I would add it like this:
-
 ![Screenshot Example](01.png)
