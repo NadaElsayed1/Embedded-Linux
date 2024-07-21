@@ -1,4 +1,3 @@
-```markdown
 # Task 4: User and Group Management with Bash Scripts
 
 Welcome to Task 4 of the Embedded Linux Administration series! This task involves creating and managing users and groups using Bash scripts. Below, I provide detailed instructions for each step, including checking for existing users and groups, and handling screenshots in Ubuntu.
@@ -169,4 +168,3 @@ To add a picture to this README, use the following markdown syntax:
 For example, if I have an image named `01.png` in the same directory as this README file, I would add it like this:
 
 ![Screenshot Example](01.png)
-```
