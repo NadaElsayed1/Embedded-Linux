@@ -1,3 +1,4 @@
+```markdown
 # Task 4: User and Group Management with Bash Scripts
 
 Welcome to Task 4 of the Embedded Linux Administration series! This task involves creating and managing users and groups using Bash scripts. Below, I provide detailed instructions for each step, including checking for existing users and groups, and handling screenshots in Ubuntu.
@@ -10,7 +11,7 @@ Welcome to Task 4 of the Embedded Linux Administration series! This task involve
 4. [Deleting a User Account](#deleting-a-user-account)
 5. [Deleting a Group](#deleting-a-group)
 6. [Difference Between `adduser` and `useradd`](#difference-between-adduser-and-useradd)
-7. [Running](#running-process)
+7. [Running](#running)
 
 ## Creating a User and Adding to a Group
 
@@ -19,8 +20,8 @@ First, I create a user named `yourName` and add them to the `FamilyName` group. 
 ```bash
 #!/bin/bash
 
-USER_NAME=""
-GROUP_NAME=""
+USER_NAME="yourName"
+GROUP_NAME="FamilyName"
 
 # Check if group exists, if not, create it
 if getent group "$GROUP_NAME" >/dev/null; then
@@ -44,6 +45,16 @@ id "$USER_NAME"
 echo "Group information for $GROUP_NAME:"
 getent group "$GROUP_NAME"
 ```
+
+**Explanation**:
+
+- `getent group "$GROUP_NAME" >/dev/null`: Checks if the group exists. If it does, no output is produced; if not, it exits with a non-zero status.
+- `id "$USER_NAME" &>/dev/null`: Checks if the user exists. If it does, the command produces no output; if not, it exits with a non-zero status.
+- `/dev/null`: A special file that discards all data written to it, often used to suppress command output.
+- Redirection operators:
+  - `>`: Redirects standard output (stdout) to a file or device.
+  - `2>`: Redirects standard error (stderr) to a file or device.
+  - `&>`: Redirects both stdout and stderr to a file or device.
 
 ## Creating a Secondary Group
 
@@ -71,7 +82,7 @@ To lock the user account so that they can't log in, I use the following script:
 ```bash
 #!/bin/bash
 
-USER_NAME=""
+USER_NAME="yourName"
 
 # Lock user account
 if id "$USER_NAME" &>/dev/null; then
@@ -82,6 +93,10 @@ else
 fi
 ```
 
+**Explanation**:
+
+- `usermod -L "$USER_NAME"`: Locks the user account by placing a '!' in front of the encrypted password in the `/etc/shadow` file, effectively disabling the password.
+
 ## Deleting a User Account
 
 To delete a user account, I use this script:
@@ -89,7 +104,7 @@ To delete a user account, I use this script:
 ```bash
 #!/bin/bash
 
-USER_NAME=""
+USER_NAME="yourName"
 
 # Delete user account
 if id "$USER_NAME" &>/dev/null; then
@@ -107,7 +122,7 @@ Finally, to delete a group, I use this script:
 ```bash
 #!/bin/bash
 
-GROUP_NAME=""
+GROUP_NAME="FamilyName"
 
 # Delete group
 if getent group "$GROUP_NAME" >/dev/null; then
@@ -136,4 +151,22 @@ sudo adduser yourName --ingroup FamilyName
 
 ## Running
 
-![Description of Image](01.png)
+To run the scripts, make sure they have executable permissions. For example:
+
+```bash
+chmod +x adduser.sh
+./adduser.sh
+```
+
+## Adding a Picture
+
+To add a picture to this README, use the following markdown syntax:
+
+```markdown
+![Description of Image](path/to/image.png)
+```
+
+For example, if I have an image named `01.png` in the same directory as this README file, I would add it like this:
+
+![Screenshot Example](01.png)
+```
