@@ -1,7 +1,7 @@
 # Communication Setup Between Host Machine (x86) and VExpress via Ethernet
 
 ## Introduction
-Welcome to the Embedded Linux series! This task involves creating and managing users and groups using Bash scripts. Below, I provide detailed instructions for each step, including checking for existing users and groups, and handling screenshots in Ubuntu.
+Welcome to the Embedded Linux series! This task involves creating and managing users and groups using Bash scripts. Below, I provide detailed instructions for each step, including checking for existing users and groups.
 
 ## Prerequisites
 To establish communication between your host machine (x86) and VExpress, you need to have U-Boot or a minimal Linux kernel installed on the VExpress. The communication will be done via the Ethernet protocol, enabling you to ping from the x86 host. Follow the steps below to achieve this setup.
