@@ -48,6 +48,7 @@ To establish communication between your host machine (x86) and VExpress, you nee
 
 3. **TFTP Configuration**:
    - Edit the TFTP server configuration file `/etc/default/tftpd-hpa`:
+  
    ![Alt text](images/03.png)
 
    It specifies the directory, address (port 69), and options. Since `tftpd-hpa` is the directory I will work with, I need to have read and write permissions on it. As we see, it currently has only `--secure`, which means read-only permission, so I should add the `--create` option (write permission is a must).
@@ -60,6 +61,7 @@ To establish communication between your host machine (x86) and VExpress, you nee
 
 4. **Service Management**:
    - The TFTP service is managed by an executable in `/etc/init.d/` with start and stop functions.
+   
    ![Alt text](images/004.png)
 
    Additionally, under the `/etc/init.d/` directory, there is a `tftpd-hpa` executable file with start and stop functions. When `init.d` runs this app, it passes the configuration to it so you can use it.
