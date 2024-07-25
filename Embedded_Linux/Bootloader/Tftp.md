@@ -142,3 +142,22 @@ To establish communication between your host machine (x86) and VExpress, you nee
    ![Alt text](images/11.png)
    ![Alt text](images/12.png)
 
+### bootz command and image types:
+  - The bootz command in U-Boot is used to boot a zImage kernel, which is a compressed kernel image format used by ARM Linux kernels. Here's a brief 
+    overview of the different image types and their relation to bootz:
+
+    - zImage:
+        A compressed kernel image.
+        Loaded into memory and decompressed by the kernel itself.
+        bootz is specifically used to boot zImage files.
+
+    - uImage:
+        A wrapper around a kernel image (can be zImage or uncompressed).
+        Created using the mkimage tool.
+        Contains metadata like load address and entry point.
+        Booted using the bootm command.
+
+    - Image:
+        An uncompressed kernel image.
+        Typically used in modern ARM kernels.
+        Booted using the booti command.
