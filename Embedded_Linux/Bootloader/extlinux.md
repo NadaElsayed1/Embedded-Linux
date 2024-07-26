@@ -29,7 +29,7 @@
                 KERNEL ../<your_zImage>
                 FDT ../<your_file.dtb>
             ```
-   ![Alt text](images/1.png)
+        ![Alt text](images/1.png)
 
     4. **Apply the configuration**:
         - Save the `extlinux.conf` file.
