@@ -1,5 +1,3 @@
-Here's the enhanced version with logical and conceptual corrections, as well as improved instructions:
-
 ## Alternative Method: Using bootflow scan
 
 - U-Boot offers an alternative method for handling scripts and configuring autoboot using the *bootflow scan* command.
@@ -45,5 +43,3 @@ Here's the enhanced version with logical and conceptual corrections, as well as 
         saveenv
         ```
         ![Alt text](images/4.png)
-
-By following these steps, you can leverage `bootflow scan` for efficient script handling and autoboot configuration.
