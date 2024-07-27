@@ -52,11 +52,11 @@ This new method provides a more modular and flexible way to handle different har
       ```
       Navigate to `cd /linux/arch/arm/configs` and choose the board, which is `vexpress_defconfig`. Then go back to the Linux directory `cd ~/kernel/linux`. 
     
-      ![Alt text](images/03.png)
+      ![3](images/03.png)
       
       If you run `make vexpress_defconfig`, you will get an error *can't find default configuration*. This is because it is looking in the wrong place (arch/x86/configs/vexpress instead of arch/arm). 
       
-      ![Alt text](images/01.png)
+      ![1](images/01.png)
 
       So, set the environment variables:
       ```sh
@@ -65,7 +65,7 @@ This new method provides a more modular and flexible way to handle different har
       ```
       Now you can run `make vexpress_defconfig`.
       
-      ![Alt text](images/02.png)
+      ![2](images/02.png)
 
     3. Configure the kernel:
     
@@ -75,13 +75,13 @@ This new method provides a more modular and flexible way to handle different har
       Let's configure our kernel:
        1. Go to General Setup -> Kernel Compression Mode
         
-        ![Alt text](images/04.png)
-        ![Alt text](images/05.png)
+       ![4](images/04.png)
+       ![5](images/05.png)
 
 
         As you see, there are many types of compression, and we will choose xz. Let's know more about it. Write a queshion mark `?` or choose help at xz:
-        ![Alt text](images/06.png)
-        ![Alt text](images/07.png)
+       ![6](images/06.png)
+       ![7](images/07.png)
 
             - It says that the kernel is about 30% smaller in size compared to gzip, but at the endpoint in RAM, it's the same.
             - During decompression, xz is better than LZMA and worse than gzip.
@@ -92,34 +92,35 @@ This new method provides a more modular and flexible way to handle different har
         Finally, the command I use to decompress the action of xz is `bootz`.
 
        2. Go back to General Setup -> Initial RAM filesytem and RAM disk (initramfs/initrd) support (makesure its selected)
-        ![Alt text](images/10.png)
-        ![Alt text](images/11.png)
+       ![10](images/10.png)
+       ![11](images/11.png)
         
 
         Now the kernel will go to RAM to decompress itself. The kernel knows it has arrived in RAM by the `bootz` command sent to U-Boot.
 
        3. Got to File Systems -> select ext4. Linux is built on a filesystem type ext4, not FAT.
-        ![Alt text](images/12.png)
+       ![12](images/12.png)
 
 
        4. Search for devtmpfs using `/`
 
-        ![Alt text](images/13.png)
+       ![13](images/13.png)
 
         press 1 at the selected line
-        ![Alt text](images/14.png)
+       ![14](images/14.png)
     
 
-        devtmpfs is a virtual filesystem that the kernel creates to allow userspace access to virtual devices. Ensure that the option for devtmpfs being automounted is "not selected" as we will do the mounting ourselves.
+        devtmpfs is a virtual filesystem that the kernel creates to allow userspace access to virtual devices. 
+        Ensure that the option for devtmpfs being automounted is not selected as we will do the mounting ourselves.
 
-        ![Alt text](images/15.png)
+       ![15](images/15.png)
 
        5. Change your kernel local version to your name and append on it -v1.0
        For example my kernel name is "Nada-v1.0"
        so go back to general setup -> Local version - append to kernel release
         
-        ![Alt text](images/08.png)
-        ![Alt text](images/09.png)
+       ![8](images/08.png)
+       ![9](images/09.png)
 
        6. Finally, save the changes.
 
@@ -138,7 +139,7 @@ This new method provides a more modular and flexible way to handle different har
        make -j4 zImage modules dtbs
       ```
     
-    ![Alt text](images/16.png)
+   ![16](images/16.png)
 
    At the end, it will create the zImage.
    You may not see it in the `/linux` directory, but you can find it by running `ls /linux/arch/arm/boot`. Here you will find `Image` and `zImage`. You can also see `vmlinux`, which is the compiled source code (binary Linux). This file includes debugging symbols and the symbol table, so its size is very large. To see its size, run:
@@ -146,7 +147,7 @@ This new method provides a more modular and flexible way to handle different har
       ```sh
       du -sh vmlinux
       ```
-    ![Alt text](images/17.png)
+   ![17](images/17.png)
 
       All 200M stored in RAM.
 
@@ -155,7 +156,7 @@ This new method provides a more modular and flexible way to handle different har
       du -sh Image
       du -sh zImage
       ```
-    ![Alt text](images/18.png)
+   ![18](images/18.png)
 
       We can conclude that one of them is compressed (`zImage`, which is self-compressed) and the other is not. If you want to boot using `Image`, use the `booti` command.
 
@@ -163,7 +164,7 @@ This new method provides a more modular and flexible way to handle different har
       ```sh
       cd ~/kernel/linux/arch/arm/boot/dts/arm
       ```
-    ![Alt text](images/19.png)
+   ![19](images/19.png)
 
    5. Now, we need to copy the files to the TFTP folder. In my case:
       ```sh
@@ -171,7 +172,7 @@ This new method provides a more modular and flexible way to handle different har
       sudo cp kernel/linux/arch/arm/boot/zImage /srv/tftp
       sudo cp kernel/linux/arch/arm/boot/dts/arm/vexpress-v2p-ca9.dtb /srv/tftp
       ```
-    ![Alt text](images/20.png)
+   ![20](images/20.png)
 
       If your `file.dtb` doesn't exist, you can run `make dtbs`.
 
