@@ -20,160 +20,158 @@ This division allows Linux to be architecture-based rather than board-specific. 
 
 This new method provides a more modular and flexible way to handle different hardware configurations without modifying the core kernel logic, streamlining the process of adapting Linux to various architectures.
 
-3. **What is DTS, DTC, DTB**:
+### What is DTS, DTC, DTB:
 
-    1. DTS: Device Tree Source
-        - **Description:** A human-readable text file that describes the hardware components of a system. It contains addressable nodes and properties for each peripheral and device.
-        - **Example:** Describes CPUs, memory, buses, and peripherals.
+**DTS**: Device Tree Source
+- **Description:** A human-readable text file that describes the hardware components of a system. It contains addressable nodes and properties for each peripheral and device.
+- **Example:** Describes CPUs, memory, buses, and peripherals.
 
-    2. DTC: Device Tree Compiler
-        - **Description:** A tool that converts the human-readable DTS files into binary format. It takes a DTS file as input and produces a DTB file.
+**DTC**: Device Tree Compiler
+- **Description:** A tool that converts the human-readable DTS files into binary format. It takes a DTS file as input and produces a DTB file.
 
-    3. DTB: Device Tree Binary
-        - **Description:** A binary file generated from a DTS file using the DTC. It is used by the Linux kernel to understand the hardware layout of the system during boot time.
-        - **Example:** The kernel reads the DTB file to configure the hardware correctly.
+**DTB**: Device Tree Binary
+- **Description:** A binary file generated from a DTS file using the DTC. It is used by the Linux kernel to understand the hardware layout of the system during boot time.
+- **Example:** The kernel reads the DTB file to configure the hardware correctly.
 
 ## Now let's dive into the kernel installation
+
+1. Clone the kernel source:
+   ```sh
+   mkdir kernel
+   cd kernel
+   ```
+   ```sh
+   git clone --depth=1 git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git
+   ```
+   `--depth=1` means to retrieve only the most recent commit, not the entire history. Then `cd linux`
+
+2. Then let's run Make to configure the Vexpress a9
+   ```sh
+   make vexpress_defconfig
+   ```
+   Navigate to `cd /linux/arch/arm/configs` and choose the board, which is `vexpress_defconfig`. Then go back to the Linux directory `cd ~/kernel/linux`.
+
+   ![Alt text](images/03.png)
    
-   1. Clone the kernel source:
-      ```sh
-      mkdir kernel
-      cd Kernel
-      ```
-      ```sh
-      git clone --depth=1 git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git
-      ```
-      `--depth=1` means to retrieve only the most recent commit, not the entire history.
-      Then `cd linux`
+   If you run `make vexpress_defconfig`, you will get an error *can't find default configuration*. This is because it is looking in the wrong place (arch/x86/configs/vexpress instead of arch/arm). 
+   
+   ![Alt text](images/01.png)
 
-   2. Then let's run Make to configure the Vexpress a9
-      ```sh
-      make vexpress_defconfig
-      ```
-      Navigate to `cd /linux/arch/arm/configs` and choose the board, which is `vexpress_defconfig`. Then go back to the Linux directory `cd ~/kernel/linux`. 
-    
-      ![3](images/03.png)
+   So, set the environment variables:
+   ```sh
+   export ARCH=arm
+   export CROSS_COMPILE=~/x-tools/arm-cortexa9_neon-linux-musleabihf/bin/arm-cortexa9_neon-linux-musleabihf-
+   ```
+   Now you can run `make vexpress_defconfig`.
+   
+   ![Alt text](images/02.png)
+
+3. Configure the kernel:
+   ```sh
+   make menuconfig
+   ```
+   Let's configure our kernel:
+   1. Go to General Setup -> Kernel Compression Mode
+   
+      ![Alt text](images/04.png)
+      ![Alt text](images/05.png)
+
+      As you see, there are many types of compression, and we will choose xz. Let's know more about it. Write a question mark `?` or choose help at xz:
+      ![Alt text](images/06.png)
+      ![Alt text](images/07.png)
+
+      - It says that the kernel is about 30% smaller in size compared to gzip, but at the endpoint in RAM, it's the same.
+      - During decompression, xz is better than LZMA and worse than gzip.
+      - In terms of speed, it's equal to LZMA.
       
-      If you run `make vexpress_defconfig`, you will get an error *can't find default configuration*. This is because it is looking in the wrong place (arch/x86/configs/vexpress instead of arch/arm). 
+      So, finally, I can pick a specific compression method to make Linux boot faster depending on my CPU and RAM. For example, when the CPU is faster and RAM is slower, I will use gzip to generate a compressed image, as the CPU can compress and then pass a smaller image to RAM. If the opposite is true, where the CPU is slower and RAM is faster, it's better to use an uncompressed image. This is because, in this case, the CPU will be slower to compress, so I need to pick a method that minimizes CPU load and takes advantage of the faster RAM. Therefore, for slower CPUs and faster RAM, using an uncompressed image or a compression method with lower CPU overhead, such as LZ4, is recommended. LZ4 provides fast decompression speeds and is lightweight on CPU usage, making it ideal for scenarios where CPU performance is limited but RAM performance is not.
+
+      Finally, the command I use to decompress the action of xz is `bootz`.
+
+   2. Go back to General Setup -> Initial RAM filesystem and RAM disk (initramfs/initrd) support (make sure it's selected)
+      ![Alt text](images/10.png)
+      ![Alt text](images/11.png)
       
-      ![1](images/01.png)
+      Now the kernel will go to RAM to decompress itself. The kernel knows it has arrived in RAM by the `bootz` command sent to U-Boot.
 
-      So, set the environment variables:
-      ```sh
-      export ARCH=arm
-      export CROSS_COMPILE=~/x-tools/arm-cortexa9_neon-linux-musleabihf/bin/arm-cortexa9_neon-linux-musleabihf-
-      ```
-      Now you can run `make vexpress_defconfig`.
+   3. Go to File Systems -> select ext4. Linux is built on a filesystem type ext4, not FAT.
+      ![Alt text](images/12.png)
+
+   4. Search for devtmpfs using `/`
+
+      ![Alt text](images/13.png)
+
+      Press 1 at the selected line
+      ![Alt text](images/14.png)
+
+      devtmpfs is a virtual filesystem that the kernel creates to allow userspace access to virtual devices. Ensure that the option for devtmpfs being automounted is "not selected" as we will do the mounting ourselves.
+
+      ![Alt text](images/15.png)
+
+   5. Change your kernel local version to your name and append on it -v1.0
+      For example, my kernel name is "Nada-v1.0"
+      so go back to general setup -> Local version - append to kernel release
       
-      ![2](images/02.png)
+      ![Alt text](images/08.png)
+      ![Alt text](images/09.png)
 
-    3. Configure the kernel:
-    ```sh
-    make menuconfig
-    ```
-      Let's configure our kernel:
-       1. Go to General Setup -> Kernel Compression Mode
-        
-       ![4](images/04.png)
-       ![5](images/05.png)
+   6. Finally, save the changes.
 
+4. Now, let's run `make -j4` :
+   - `-j4`: This flag specifies the number of concurrent jobs to run. Using `-j4` means the build process will utilize four parallel jobs, which speeds up the compilation. Running multiple jobs concurrently can greatly reduce the build time.
 
-        As you see, there are many types of compression, and we will choose xz. Let's know more about it. Write a queshion mark `?` or choose help at xz:
-       ![6](images/06.png)
-       ![7](images/07.png)
+   - Note: Each CPU core can handle two jobs simultaneously. In this case, the computer has four cores—two are dedicated to the build process, and the other two are reserved for the Linux OS. To find out the number of cores on your system, use the command:
+   
+   - `zImage`: This target builds a compressed kernel image known as zImage. This image is the primary executable that the bootloader loads into memory.
 
-            - It says that the kernel is about 30% smaller in size compared to gzip, but at the endpoint in RAM, it's the same.
-            - During decompression, xz is better than LZMA and worse than gzip.
-            - In terms of speed, it's equal to LZMA.
-        
-        So, finally, I can pick a specific compression method to make Linux boot faster depending on my CPU and RAM. For example, when the CPU is faster and RAM is slower, I will use gzip to generate a compressed image, as the CPU can compress and then pass a smaller image to RAM. If the opposite is true, where the CPU is slower and RAM is faster, it's better to use an uncompressed image. This is because, in this case, the CPU will be slower to compress, so I need to pick a method that minimizes CPU load and takes advantage of the faster RAM. Therefore, for slower CPUs and faster RAM, using an uncompressed image or a compression method with lower CPU overhead, such as LZ4, is recommended. LZ4 provides fast decompression speeds and is lightweight on CPU usage, making it ideal for scenarios where CPU performance is limited but RAM performance is not.
+   - `modules`: This target compiles the loadable kernel modules. These modules are additional pieces of code that can be loaded into or unloaded from the kernel dynamically, adding extra functionality.
 
-        Finally, the command I use to decompress the action of xz is `bootz`.
+   - `dtbs`: This target compiles the device tree blobs (DTBs). The device tree is a data structure that provides a detailed description of the hardware board.
+   
+   ```sh
+   make -j4 zImage modules dtbs
+   ```
+   
+   ![Alt text](images/16.png)
 
-       2. Go back to General Setup -> Initial RAM filesytem and RAM disk (initramfs/initrd) support (makesure its selected)
-       ![10](images/10.png)
-       ![11](images/11.png)
-        
+   At the end, it will create the zImage. You may not see it in the `/linux` directory, but you can find it by running `ls /linux/arch/arm/boot`. Here you will find `Image` and `zImage`. You can also see `vmlinux`, which is the compiled source code (binary Linux). This file includes debugging symbols and the symbol table, so its size is very large. To see its size, run:
+   
+   ```sh
+   du -sh vmlinux
+   ```
+   
+   ![Alt text](images/17.png)
 
-        Now the kernel will go to RAM to decompress itself. The kernel knows it has arrived in RAM by the `bootz` command sent to U-Boot.
+   All 200M stored in RAM.
 
-       3. Got to File Systems -> select ext4. Linux is built on a filesystem type ext4, not FAT.
-       ![12](images/12.png)
+   Compare the sizes of `Image` and `zImage`:
+   ```sh
+   du -sh Image
+   du -sh zImage
+   ```
+   
+   ![Alt text](images/18.png)
 
+   We can conclude that one of them is compressed
 
-       4. Search for devtmpfs using `/`
+ (`zImage`, which is self-compressed) and the other is not. If you want to boot using `Image`, use the `booti` command.
 
-       ![13](images/13.png)
+   You can find the `file.dtb` at:
+   ```sh
+   cd ~/kernel/linux/arch/arm/boot/dts/arm
+   ```
 
-        press 1 at the selected line
-       ![14](images/14.png)
-    
+   ![Alt text](images/19.png)
 
-        devtmpfs is a virtual filesystem that the kernel creates to allow userspace access to virtual devices. 
-        Ensure that the option for devtmpfs being automounted is not selected as we will do the mounting ourselves.
+   Now, we need to copy the files to the TFTP folder. In my case:
+   ```sh
+   cd ~
+   sudo cp kernel/linux/arch/arm/boot/zImage /srv/tftp
+   sudo cp kernel/linux/arch/arm/boot/dts/arm/vexpress-v2p-ca9.dtb /srv/tftp
+   ```
 
-       ![15](images/15.png)
+   ![Alt text](images/20.png)
 
-       5. Change your kernel local version to your name and append on it -v1.0
-       For example my kernel name is "Nada-v1.0"
-       so go back to general setup -> Local version - append to kernel release
-        
-       ![8](images/08.png)
-       ![9](images/09.png)
+   If your `file.dtb` doesn't exist, you can run `make dtbs`.
 
-       6. Finally, save the changes.
-
-   4. Now, run let's run `make -j4` :
-      - j4: This flag specifies the number of concurrent jobs to run. Using -j4 means the build process will utilize four parallel jobs, which speeds up the compilation. Running multiple jobs concurrently can greatly reduce the build time.
-
-      - Note: Each CPU core can handle two jobs simultaneously. In this case, the computer has four cores—two are dedicated to the build process, and the other two are reserved for the Linux OS. To find out the number of cores on your system, use the command:
-      
-      - zImage: This target builds a compressed kernel image known as zImage. This image is the primary executable that the bootloader loads into memory.
-
-      - modules: This target compiles the loadable kernel modules. These modules are additional pieces of code that can be loaded into or unloaded from the kernel dynamically, adding extra functionality.
-
-      - dtbs: This target compiles the device tree blobs (DTBs). The device tree is a data structure that provides a detailed description of the hardware board.
-      
-      ```sh
-       make -j4 zImage modules dtbs
-      ```
-    
-   ![16](images/16.png)
-
-   At the end, it will create the zImage.
-   You may not see it in the `/linux` directory, but you can find it by running `ls /linux/arch/arm/boot`. Here you will find `Image` and `zImage`. You can also see `vmlinux`, which is the compiled source code (binary Linux). This file includes debugging symbols and the symbol table, so its size is very large. To see its size, run:
-      
-      ```sh
-      du -sh vmlinux
-      ```
-   ![17](images/17.png)
-
-      All 200M stored in RAM.
-
-      Compare the sizes of `Image` and `zImage`:
-      ```sh
-      du -sh Image
-      du -sh zImage
-      ```
-   ![18](images/18.png)
-
-      We can conclude that one of them is compressed (`zImage`, which is self-compressed) and the other is not. If you want to boot using `Image`, use the `booti` command.
-
-      You can find the `file.dtb` at:
-      ```sh
-      cd ~/kernel/linux/arch/arm/boot/dts/arm
-      ```
-   ![19](images/19.png)
-
-   5. Now, we need to copy the files to the TFTP folder. In my case:
-      ```sh
-      cd ~
-      sudo cp kernel/linux/arch/arm/boot/zImage /srv/tftp
-      sudo cp kernel/linux/arch/arm/boot/dts/arm/vexpress-v2p-ca9.dtb /srv/tftp
-      ```
-   ![20](images/20.png)
-
-      If your `file.dtb` doesn't exist, you can run `make dtbs`.
-
-   6. Now, what happens is our kernel goes to a specific part of RAM, and our `file.dtb` is loaded to another part of RAM. The `bootz` command maps them to each other, as the kernel alone cannot work without the `file.dtb`.
-
+   Now, what happens is our kernel goes to a specific part of RAM, and our `file.dtb` is loaded to another part of RAM. The `bootz` command maps them to each other, as the kernel alone cannot work without the `file.dtb`.
