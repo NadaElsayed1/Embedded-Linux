@@ -68,10 +68,9 @@ This new method provides a more modular and flexible way to handle different har
       ![2](images/02.png)
 
     3. Configure the kernel:
-    
-        ```sh
-        make menuconfig
-        ```
+    ```sh
+    make menuconfig
+    ```
       Let's configure our kernel:
        1. Go to General Setup -> Kernel Compression Mode
         
