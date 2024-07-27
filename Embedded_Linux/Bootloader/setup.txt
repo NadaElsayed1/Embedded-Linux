@@ -1,0 +1,52 @@
+# Check for MMC device and load zImage and hardware.dtb from SD card
+if test ${dev} = mmc; then
+    echo "Checking for MMC..."
+    if mmc dev 0; then
+        echo "MMC found. Loading zImage and hardware.dtb..."
+        if load mmc 0:1 ${Kernel_AddressInDRAM} zImage; then
+            echo "zImage loaded successfully."
+        else
+            echo "Failed to load zImage."
+            exit 1
+        fi
+        if load mmc 0:1 ${ftd_FileAddress} hardware.dtb; then
+            echo "hardware.dtb loaded successfully."
+        else
+            echo "Failed to load hardware.dtb."
+            exit 1
+        fi
+        bootz ${Kernel_AddressInDRAM} - ${ftd_FileAddress}
+        exit 0
+    else
+        echo "MMC device not found."
+    fi
+fi
+
+# Check for network communication
+if test ${dev} = nic; then
+    echo "Checking for network..."
+    setenv serverip 192.168.1.8
+    if ping -c 1 192.168.1.8; then
+        echo "Network available. Loading files from TFTP server..."
+        if tftp ${Kernel_AddressInDRAM} zImage; then
+            echo "zImage loaded successfully from TFTP."
+        else
+            echo "Failed to load zImage from TFTP."
+            exit 1
+        fi
+        if tftp ${ftd_FileAddress} hardware.dtb; then
+            echo "hardware.dtb loaded successfully from TFTP."
+        else
+            echo "Failed to load hardware.dtb from TFTP."
+            exit 1
+        fi
+        bootz ${Kernel_AddressInDRAM} - ${ftd_FileAddress}
+        exit 0
+    else
+        echo "No network available."
+    fi
+fi
+
+# If no option is available
+echo "No suitable boot option found."
+

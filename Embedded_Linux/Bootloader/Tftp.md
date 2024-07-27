@@ -17,13 +17,62 @@ To establish communication between your host machine (x86) and VExpress, you nee
 
 2. **Create U-Boot Setup Script**:
    - Write your setup commands in a text file (e.g., `qemu_ifup`).
+    ```sh
+    #!/bin/sh
+    ip a add <YourIPAddress> dev $1
+    ip link set $1 up
+    ```
+    then give the script the execute permission, run the follow command
+    ```sh
+    chmod +x qemu_ifup
+    ```
+    **Make sure that the script in the same directory of the u-boot
+    and now you can test the connection between server and your host machine using `tap` at qemu running command:
+    ```sh
+    sudo qemu-system-arm -M vexpress-a9 -m 128M -nographic -kernel path/u-boot -sd path/sd.img -net tap,script=./qemu_ifup -net nic
+    ```
    - Convert this text file to a U-Boot script image using `mkimage` to make it executable.
      ```sh
      mkimage -T script -C none -n 'QEMU Setup Script' -d qemu_ifup qemu_ifup.img
      ```
 
+
 3. **Generic Addressing**:
    - Ensure your script uses environment variables (`$kernel_addr_r` and `$fdt_addr_r`) instead of fixed addresses to maintain flexibility.
+
+  **What about generate our qutoboot script now:**
+  ```sh
+    # Check for MMC device and load zImage and hardware.dtb from SD card
+  if test ${dev} = mmc; then
+      echo "Checking for MMC..."
+      if mmc dev 0; then
+          echo "MMC found. Loading zImage and hardware.dtb..."
+          if load mmc 0:1 ${Kernel_AddressInDRAM} zImage; then
+              echo "zImage loaded successfully."
+          else
+              echo "Failed to load zImage."
+              exit 1
+          fi
+          if load mmc 0:1 ${ftd_FileAddress} hardware.dtb; then
+              echo "hardware.dtb loaded successfully."
+          else
+              echo "Failed to load hardware.dtb."
+              exit 1
+          fi
+          bootz ${Kernel_AddressInDRAM} - ${ftd_FileAddress}
+          exit 0
+      else
+          echo "MMC device not found."
+      fi
+  fi
+
+      # Check for network communication
+  if test ${dev} = nic; then
+      echo "Checking for network..."
+      #just doing that here untill installing tftp
+      # If no option is available
+  echo "No suitable boot option found."
+  ```
 
 ## Step 2: Flashing Through Server Using TFTP
 (Using a protocol supported by U-Boot like TFTP, as x86 has protocols like HTTP which do not work with U-Boot, so you need to install the TFTP application.)
@@ -161,3 +210,87 @@ To establish communication between your host machine (x86) and VExpress, you nee
         An uncompressed kernel image.
         Typically used in modern ARM kernels.
         Booted using the booti command.
+
+**Let' now generate the complete autoboot script**
+```sh
+# Check for MMC device and load zImage and hardware.dtb from SD card
+if test ${dev} = mmc; then
+    echo "Checking for MMC..."
+    if mmc dev 0; then
+        echo "MMC found. Loading zImage and hardware.dtb..."
+        if load mmc 0:1 ${Kernel_AddressInDRAM} zImage; then
+            echo "zImage loaded successfully."
+        else
+            echo "Failed to load zImage."
+            exit 1
+        fi
+        if load mmc 0:1 ${ftd_FileAddress} hardware.dtb; then
+            echo "hardware.dtb loaded successfully."
+        else
+            echo "Failed to load hardware.dtb."
+            exit 1
+        fi
+        bootz ${Kernel_AddressInDRAM} - ${ftd_FileAddress}
+        exit 0
+    else
+        echo "MMC device not found."
+    fi
+fi
+
+# Check for network communication
+if test ${dev} = nic; then
+    echo "Checking for network..."
+    setenv serverip 192.168.1.8
+    if ping -c 1 192.168.1.8; then
+        echo "Network available. Loading files from TFTP server..."
+        if tftp ${Kernel_AddressInDRAM} zImage; then
+            echo "zImage loaded successfully from TFTP."
+        else
+            echo "Failed to load zImage from TFTP."
+            exit 1
+        fi
+        if tftp ${ftd_FileAddress} hardware.dtb; then
+            echo "hardware.dtb loaded successfully from TFTP."
+        else
+            echo "Failed to load hardware.dtb from TFTP."
+            exit 1
+        fi
+        bootz ${Kernel_AddressInDRAM} - ${ftd_FileAddress}
+        exit 0
+    else
+        echo "No network available."
+    fi
+fi
+
+# If no option is available
+echo "No suitable boot option found."
+```
+then let's follow:
+```sh
+
+#use the mkimage tool to convert setup.txt into a U-Boot script image. If mkimage is not installed, you may need to install it (typically part of the u-boot-tools package).
+
+mkimage -A arm -T script -C none -n 'Setup Script' -d setup.txt setup.scr
+
+#run qemu
+sudo qemu-system-arm -M vexpress-a9 -m 128M -nographic -kernel path/u-boot -sd path/sd.img -net tap,script=./qemu-ifup -net nic
+
+bdinfo
+
+#then i have to set ipaddr, serverip
+#in my case
+setenv ipadd 192.168.1.9
+
+#the address of the host machine that you set at qemu_if script
+setenv serverip 192.168.1.8
+
+saveenv
+
+fatload mmc 0:1 0x60003000 /setup.txt
+source 0x60003000
+
+setenv bootcmd 'fatload mmc 0:1 ${loadaddr} setup.scr; source ${loadaddr}'
+saveenv
+
+reset
+```
