@@ -77,6 +77,7 @@ This new method provides a more modular and flexible way to handle different har
       ![Alt text](images/05.png)
 
       As you see, there are many types of compression, and we will choose xz. Let's know more about it. Write a question mark `?` or choose help at xz:
+      
       ![Alt text](images/06.png)
       ![Alt text](images/07.png)
 
