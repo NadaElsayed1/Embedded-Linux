@@ -69,9 +69,9 @@ This new method provides a more modular and flexible way to handle different har
 
     3. Configure the kernel:
     
-    ```sh
-    make menuconfig
-    ```
+        ```sh
+        make menuconfig
+        ```
       Let's configure our kernel:
        1. Go to General Setup -> Kernel Compression Mode
         
@@ -123,7 +123,7 @@ This new method provides a more modular and flexible way to handle different har
 
        6. Finally, save the changes.
 
-   3. Now, run let's run `make -j4` :
+   4. Now, run let's run `make -j4` :
       - j4: This flag specifies the number of concurrent jobs to run. Using -j4 means the build process will utilize four parallel jobs, which speeds up the compilation. Running multiple jobs concurrently can greatly reduce the build time.
 
       - Note: Each CPU core can handle two jobs simultaneously. In this case, the computer has four cores—two are dedicated to the build process, and the other two are reserved for the Linux OS. To find out the number of cores on your system, use the command:
@@ -165,7 +165,7 @@ This new method provides a more modular and flexible way to handle different har
       ```
     ![Alt text](images/19.png)
 
-   4. Now, we need to copy the files to the TFTP folder. In my case:
+   5. Now, we need to copy the files to the TFTP folder. In my case:
       ```sh
       cd ~
       sudo cp kernel/linux/arch/arm/boot/zImage /srv/tftp
@@ -175,5 +175,5 @@ This new method provides a more modular and flexible way to handle different har
 
       If your `file.dtb` doesn't exist, you can run `make dtbs`.
 
-   5. Now, what happens is our kernel goes to a specific part of RAM, and our `file.dtb` is loaded to another part of RAM. The `bootz` command maps them to each other, as the kernel alone cannot work without the `file.dtb`.
+   6. Now, what happens is our kernel goes to a specific part of RAM, and our `file.dtb` is loaded to another part of RAM. The `bootz` command maps them to each other, as the kernel alone cannot work without the `file.dtb`.
 
