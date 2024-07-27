@@ -34,6 +34,7 @@ This new method provides a more modular and flexible way to handle different har
         - **Example:** The kernel reads the DTB file to configure the hardware correctly.
 
 ## Now let's dive into the kernel installation
+   
    1. Clone the kernel source:
       ```sh
       mkdir kernel
@@ -50,9 +51,11 @@ This new method provides a more modular and flexible way to handle different har
       make vexpress_defconfig
       ```
       Navigate to `cd /linux/arch/arm/configs` and choose the board, which is `vexpress_defconfig`. Then go back to the Linux directory `cd ~/kernel/linux`. 
+    
       ![Alt text](images/03.png)
       
       If you run `make vexpress_defconfig`, you will get an error *can't find default configuration*. This is because it is looking in the wrong place (arch/x86/configs/vexpress instead of arch/arm). 
+      
       ![Alt text](images/01.png)
 
       So, set the environment variables:
@@ -61,14 +64,17 @@ This new method provides a more modular and flexible way to handle different har
       export CROSS_COMPILE=~/x-tools/arm-cortexa9_neon-linux-musleabihf/bin/arm-cortexa9_neon-linux-musleabihf-
       ```
       Now you can run `make vexpress_defconfig`.
-      ![Alt text](images/01.png)
+      
+      ![Alt text](images/02.png)
 
     3. Configure the kernel:
+    
     ```sh
     make menuconfig
     ```
       Let's configure our kernel:
        1. Go to General Setup -> Kernel Compression Mode
+        
         ![Alt text](images/04.png)
         ![Alt text](images/05.png)
 
@@ -111,13 +117,14 @@ This new method provides a more modular and flexible way to handle different har
        5. Change your kernel local version to your name and append on it -v1.0
        For example my kernel name is "Nada-v1.0"
        so go back to general setup -> Local version - append to kernel release
+        
         ![Alt text](images/08.png)
         ![Alt text](images/09.png)
 
        6. Finally, save the changes.
 
    3. Now, run let's run `make -j4` :
-      - -j4: This flag specifies the number of concurrent jobs to run. Using -j4 means the build process will utilize four parallel jobs, which speeds up the compilation. Running multiple jobs concurrently can greatly reduce the build time.
+      - j4: This flag specifies the number of concurrent jobs to run. Using -j4 means the build process will utilize four parallel jobs, which speeds up the compilation. Running multiple jobs concurrently can greatly reduce the build time.
 
       - Note: Each CPU core can handle two jobs simultaneously. In this case, the computer has four cores—two are dedicated to the build process, and the other two are reserved for the Linux OS. To find out the number of cores on your system, use the command:
       
@@ -126,13 +133,16 @@ This new method provides a more modular and flexible way to handle different har
       - modules: This target compiles the loadable kernel modules. These modules are additional pieces of code that can be loaded into or unloaded from the kernel dynamically, adding extra functionality.
 
       - dtbs: This target compiles the device tree blobs (DTBs). The device tree is a data structure that provides a detailed description of the hardware board.
+      
       ```sh
        make -j4 zImage modules dtbs
       ```
+    
     ![Alt text](images/16.png)
 
    At the end, it will create the zImage.
    You may not see it in the `/linux` directory, but you can find it by running `ls /linux/arch/arm/boot`. Here you will find `Image` and `zImage`. You can also see `vmlinux`, which is the compiled source code (binary Linux). This file includes debugging symbols and the symbol table, so its size is very large. To see its size, run:
+      
       ```sh
       du -sh vmlinux
       ```
