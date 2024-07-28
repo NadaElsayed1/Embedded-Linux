@@ -44,6 +44,11 @@ We previously created a dynamic root filesystem. We will place this rootfs on th
    ```sh
    sudo mkdir /srv/nfs-share
    ```
+    Now move files from rootfs to nfs-share:
+    ```sh
+    sudo cp -rp /media/nada/rootfs/* /srv/nfs-share
+    ```
+    ![1](images/1.png)
 
 2. Ensure there is no device connected with the target IP address, and you can use this IP for QEMU.
 
