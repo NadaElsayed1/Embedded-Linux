@@ -296,4 +296,4 @@ Run QEMU with the following command:
 sudo qemu-system-arm -M vexpress-a9 -m 128M -nographic -kernel u-boot -sd /path/to/sd.img -net tap,script=./qemu_ifup -net nic
 ```
 
-![qemu run](images/55.png)
+![qemu run](images/56.png)
