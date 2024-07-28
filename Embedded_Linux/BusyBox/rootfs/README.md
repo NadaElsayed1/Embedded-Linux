@@ -1,6 +1,6 @@
 # Booting Kernel with Root Filesystem
 
-This README provides detailed instructions on how to boot a Linux kernel using two root filesystem. 
+Welcome to the Embedded Linux series! This task provides detailed instructions on how to boot a Linux kernel using root filesystem. 
 The process includes downloading and configuring BusyBox, running the system on QEMU, and starting the kernel.
 
 ## Steps
