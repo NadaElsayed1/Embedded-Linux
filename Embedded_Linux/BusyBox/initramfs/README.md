@@ -77,8 +77,8 @@ Set up the environment and boot with initramfs:
 setenv ramdisk_addr 0x60900000
 fatload mmc 0:1 $kernel_addr_r zImage
 fatload mmc 0:1 $fdt_addr_r vexpress-v2p-ca9.dtb
-fatload mmc 0:1 $ramdisk_addr myRAMfs
-setenv bootargs console=ttyAMA0 rdinit=/bin/sh
+fatload mmc 0:1 $ramdisk_addr RAMfs
+setenv bootargs 'console=ttyAMA0 root=/dev/mmcblk0p2 rootfstype=ext4 rw rootwait init=/sbin/init' 
 saveenv
 bootz $kernel_addr_r $ramdisk_addr $fdt_addr_r
 ```

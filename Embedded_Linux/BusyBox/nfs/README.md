@@ -46,9 +46,9 @@ We previously created a dynamic root filesystem. We will place this rootfs on th
    ```
     Now move files from rootfs to nfs-share:
     ```sh
-    sudo cp -rp /media/nada/rootfs/* /srv/nfs-share
+    sudo cp -rp /Desktop/Tools/rootfs_Dynamic/* /srv/nfs-share
     ```
-    ![1](images/1.png)
+    ![1](images/5.png)
 
 2. Ensure there is no device connected with the target IP address, and you can use this IP for QEMU.
 
@@ -92,11 +92,12 @@ setenv bootargs 'console=ttyAMA0 root=/dev/nfs ip=192.168.1.9:::::eth0 nfsroot=1
 ```
 Load the kernel and device tree files, then boot:
 ```sh
-fatload mmc 0:1 $kernel_addr_r zImage
-fatload mmc 0:1 $fdt_addr_r vexpress-v2p-ca9.dtb
+tftp $kernel_addr_r zImage
+tftp $fdt_addr_r vexpress-v2p-ca9.dtb
 bootz $kernel_addr_r - $fdt_addr_r
 ```
 ![1](images/46.png)
 ![1](images/48.png)
 ![1](images/49.png)
+![1](images/2.png)
 
