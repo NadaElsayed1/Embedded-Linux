@@ -6,7 +6,7 @@ as nearly we would use that to create (recovery boot) as we need to make 2 rootf
 1- execution process faster
 2- for security
 3- flash in 2 banks
-The process includes coping content of the rootfs at initramfs the then archiving it as converit to an image using (mkimage) to be apple to passing it to qemu, finally booting with this image.
+The process includes coping content of the rootfs at initramfs the then archiving it as converit to an image using (mkimage) to be able to passing it to qemu, finally booting with this image.
 
 ## Steps
 1- create init ram file system directory at ~/Desktop/Tools
