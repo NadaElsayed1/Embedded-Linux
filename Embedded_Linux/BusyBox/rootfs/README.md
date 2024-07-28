@@ -1,15 +1,7 @@
-# Booting Kernel with Root Filesystems
+# Booting Kernel with Root Filesystem
 
-This README provides detailed instructions on how to boot a Linux kernel using two root filesystems (`rootfs1` and `rootfs2`). The initramfs script prompts the user to select which root filesystem to boot. The process includes downloading and configuring BusyBox, running the system on QEMU, and starting the kernel.
-
-## Prerequisites
-
-Ensure you have the following installed:
-- QEMU
-- BusyBox source code
-- U-Boot
-- Cross-compiler toolchain for ARM (e.g., `arm-cortex_a8-linux-musleabi`)
-- NFS server for root filesystems (optional)
+This README provides detailed instructions on how to boot a Linux kernel using two root filesystem. 
+The process includes downloading and configuring BusyBox, running the system on QEMU, and starting the kernel.
 
 ## Steps
 
