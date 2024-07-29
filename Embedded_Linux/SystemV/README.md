@@ -121,10 +121,13 @@ In some systems, the application runs using Linux, with bare metal acting as a s
 ```
 node:"runlevel":action:application
     :      S   :sysinit:rcS
-    :      1   :wait:rc.c
-    :      2   :wait:rc.c
-    :      3   :wait:rc.c
-    :      4   :wait:rc.c
+    :      0   :wait:rc.c   (shutdown mode)
+    :      1   :wait:rc.c   (single_usr mode)
+    :      2   :wait:rc.c   (multi_usr mode) without network
+    :      3   :wait:rc.c   (multi_usr mode)
+    :      4   :wait:rc.c   (usr_define mode)
+    :      5   :wait:rc.c   (GUI mode)
+    :      6   :wait:rc.c   (reset mode)
 ```
 During a restart, the system returns to `sysinit`.
 
