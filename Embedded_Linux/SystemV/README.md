@@ -110,9 +110,12 @@ node:"runlevel":action:application
 ```
 Switching between runlevels restarts the system, going back to sysinit, which runs the specified file at startup.
 
+By the way Linux uses SystemD, 
+while Unix uses SystemV 
+
 ## SystemD
 
-Linux uses SystemD, while Unix uses SystemV. SystemD initializes the system sequentially, not in parallel. For example, if only Bluetooth is needed, SystemD waits for other processes, increasing CPU load.
+SystemD initializes the system sequentially, not in parallel. For example, if only Bluetooth is needed, SystemD waits for other processes, increasing CPU load.
 
 SystemD's init process is located in:
 ```bash
