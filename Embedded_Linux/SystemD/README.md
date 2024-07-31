@@ -1,7 +1,3 @@
-Sure, I'll include the images in the revised text:
-
----
-
 **systemD**
 
 **Types of Processes:**
@@ -100,109 +96,24 @@ Sure, I'll include the images in the revised text:
     WantedBy=multi-user.target  (Main target) -> Creates a symbolic link to the service in /etc/systemd/system.
     ```
 
-    Create and edit your service file:
-    ```sh
-    sudo vim /etc/systemd/system/myservice.service
-    ```
-
-    Example content for `myservice.service`:
-    ```sh
-    [Unit]
-    Description=My Custom Service
-    Requires=tftpd-hpa.service
-
-    [Service]
-    ExecStart=/home/nada/app/a.out
-    #Restart=always
-
-    [Install]
-    WantedBy=multi-user.target
-    ```
-
-3. **Creating and Testing the Application:**
-
-    - Create the application directory and file:
-      ```sh
-      mkdir app
-      touch app/hello.c
-      nano app/hello.c
-      ```
-
-    - Example `hello.c` content:
-      ```c
-      #include <stdio.h>
-      #include <unistd.h>
-      #include <signal.h>
-
-      volatile int keepRunning = 1;
-
-      void intHandler(int dummy) {
-          keepRunning = 0;
-      }
-
-      int main() {
-          printf("hello\n");
-          fflush(stdout);
-
-          signal(SIGINT, intHandler);
-
-          while (keepRunning) {
-              sleep(1);
-          }
-
-          printf("Exiting...\n");
-          fflush(stdout);
-          return 0;
-      }
-      ```
-
-    - Compile the application:
-      ```sh
-      gcc app/hello.c -o /home/nada/app/a.out
-      ```
-
-4. **Testing the Service:**
-
-    ```sh
-    sudo systemctl daemon-reload
-    sudo systemctl enable myservice.service
-    ls /etc/systemd/system/multi-user.target.wants/ | grep myservice.service 
-    sudo systemctl start myservice.service
-    sudo systemctl status myservice.service
-    sudo systemctl disable myservice.service
-    ls /etc/systemd/system/multi-user.target.wants/ | grep myservice.service 
-    sudo systemctl enable myservice.service
-    sudo systemctl start myservice.service
-    sudo systemctl status myservice.service
-    ```
-
-5. **Controlling TFTP through the Service:**
-
-    ```sh
-    systemctl stop tftpd-hpa.service 
-    systemctl status tftpd-hpa.service 
-    systemctl restart myservice.service
-    systemctl status tftpd-hpa.service 
-    ```
-
 ---
+
+Run `systemctl cat graphical.target`:
 
 ![1](images/1.png)
 
-Run `systemctl cat graphical.target`:
 Graphical.target is an essential part of the systemd initialization system for Linux, focusing on starting and managing graphical user interfaces. It ensures that all necessary services for a GUI environment are up and running, enabling users to interact with the system through a graphical desktop environment.
 
-![1](images/2.png)
 
 Run `ls lib/systemd/system` to see all units you have:
 
-![1](images/3.png)
+![1](images/2.png)
 
 Run `ls /lib/systemd/system/graphical.target.wants/` to see what graphical.target depends on before it runs.
 
-![1](images/4.png)
+![1](images/3.png)
 
-Let's display this service, as you can see:
+![1](images/4.png)
 
 ![1](images/5.png)
 
@@ -305,7 +216,3 @@ systemctl status tftpd-hpa.service
 ```
 
 ![1](images/14.png)
-
----
-
-Let me know if you need any further modifications!
