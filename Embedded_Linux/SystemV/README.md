@@ -276,19 +276,6 @@ init 2
 
 ![1](images/16.png)
 
-### 5. **Verifying and Debugging**
-
-1. **Check if `hello` is Running**:
-   - Use `ps` or `top` to check if the `hello` process is running.
-
-2. **Check for Errors**:
-   - If the script doesn't run as expected, check for errors in the script, compile errors in the C program, or configuration issues in `/etc/inittab`.
-
-3. **Logs and Output**:
-   - If necessary, add logging to your init script or check system logs for additional information.
-
-These steps should guide you through setting up a new runlevel with Buildroot, adding a custom script, and configuring a C program to run as a service. Let me know if you encounter any issues or need further assistance!
-
 ## SystemD
 
 SystemD initializes the system sequentially, not in parallel. For example, if only Bluetooth is needed, SystemD waits for other processes, increasing CPU load.
