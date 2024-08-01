@@ -113,6 +113,185 @@ Switching between runlevels restarts the system, going back to sysinit, which ru
 By the way Linux uses SystemD, 
 while Unix uses SystemV 
 
+Now lets set up a new runlevel in Buildroot and configure it to run a script (`hello`) that starts a program (`hello.py`), follow these steps:
+
+**First we need to setup and Configure Buildroot**
+
+### Download Required Libraries
+
+To begin, install the necessary libraries and tools:
+
+```sh
+sudo apt install sed make binutils gcc g++ bash patch \
+gzip bzip2 perl tar cpio python unzip rsync wget libncurses-dev
+```
+
+### Download Buildroot
+
+Clone the Buildroot repository:
+
+```sh
+git clone https://github.com/buildroot/buildroot.git
+cd buildroot
+```
+
+### Configure Buildroot
+
+```sh
+make menuconfig
+```
+
+In the configuration menu, we will set up the following:
+
+- **Init Process**: Choose between System V, systemd, or BusyBox init.
+
+  - If using systemd, remember to increase the root filesystem size in the Buildroot configuration.
+  here i chose `systemV` @ system configuration
+
+  ![1](images/17.png)
+
+  - @ Interpreter languages and scripting
+  i chose `python3`
+
+  ![1](images/18.png)
+
+  - @ Shell and utilities
+  i chose `bash`
+
+  ![1](images/19.png)
+
+  - @ Text editors and viewers
+  i chose `nano` and `vim`
+
+  ![1](images/20.png)
+
+**Now lets open the open qemu at buildroot:**
+
+![1](images/1.png)
+
+### Additional Setup
+
+Navigate to the `/etc` directory and explore its contents:
+
+```sh
+cd /etc
+ls
+cd /init.d
+```
+
+- **init.d Directory**: The `init.d` directory contains configuration files for run levels, as described earlier. The `inittab` file includes the configuration for run levels.
+
+- **Setting Run Levels and Configuration Files**: Add your run level configurations in `inittab` with the path to the respective configuration file located in `init.d`. Then, create a symbolic link to the main application in `/usr/bin`.
+
+
+![1](images/2.png)
+
+
+### 1. **Create and Configure the Init Script**
+
+First, create an init script in the `init.d` directory called `hello`. This script will use a switch-case to manage starting and stopping services.
+
+#### 1.1. Create the Init Script
+
+```sh
+#!/bin/sh
+
+case "$1" in
+start)
+    start-stop-daemon --start --exec /usr/bin/hello.py
+    ;;
+stop)
+    start-stop-daemon --stop --exec /usr/bin/hello.py
+    ;;
+*)
+    echo "Usage: $0 {start|stop}"
+    exit 1
+    ;;
+esac
+```
+
+![1](images/14.png)
+
+Save this script as `/etc/init.d/hello` and make it executable:
+
+```sh
+chmod +x /etc/init.d/hello
+```
+
+![1](images/15.png)
+
+#### 1.2. Create the python Program (`hello.py`)
+
+This program file under `/usr/bin`:
+
+```sh
+touch /usr/bin/hello.py
+```
+
+Then write the following:
+
+```py
+#!/usr/bin/env python3
+
+print("hello")
+```
+
+![1](images/10.png)
+
+2. **Make sure the Python script is executable:**:
+
+   ```sh
+   chmod +x /usr/bin/hello.py
+   ```
+
+![1](images/11.png)
+
+### 2. **Create Soft Links for Runlevel 2**
+
+In Unix-like systems, runlevels are directories that contain symbolic links to scripts in `/etc/init.d`. You will create a new directory for runlevel 2 and link the `hello` script.
+
+```sh
+mkdir /etc/rc2.d
+ln -s /etc/init.d/hello /etc/rc2.d/S99hello
+```
+
+Here, `S99hello` is a soft link to the `hello` script, with `S` indicating "start" and `99` setting its order relative to other scripts.
+
+### 3. **Update `/etc/inittab`**
+
+Modify the `/etc/inittab` file to define the new runlevel. Add the following line to start the `hello` script when runlevel 2 is entered:
+
+```sh
+rc2:2:wait:/etc/init.d/hello
+```
+
+![1](images/13.png)
+
+This tells the system to run `/etc/init.d/hello` when entering runlevel 2.
+
+### 4. **Test the New Runlevel**
+
+To test the setup, switch to runlevel 2:
+
+```sh
+init 2
+```
+
+![1](images/16.png)
+
+### 5. **Verifying and Debugging**
+
+1. **Check if `hello` is Running**:
+   - Use `ps` or `top` to check if the `hello` process is running.
+
+2. **Check for Errors**:
+   - If the script doesn't run as expected, check for errors in the script, compile errors in the C program, or configuration issues in `/etc/inittab`.
+
+3. **Logs and Output**:
+   - If necessary, add logging to your init script or check system logs for additional information.
+
+These steps should guide you through setting up a new runlevel with Buildroot, adding a custom script, and configuring a C program to run as a service. Let me know if you encounter any issues or need further assistance!
+
 ## SystemD
 
 SystemD initializes the system sequentially, not in parallel. For example, if only Bluetooth is needed, SystemD waits for other processes, increasing CPU load.
