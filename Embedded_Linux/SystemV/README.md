@@ -176,15 +176,14 @@ cd /etc
 ls
 cd /init.d
 ```
-
-- **init.d Directory**: The `init.d` directory contains configuration files for run levels, as described earlier. The `inittab` file includes the configuration for run levels.
-
-- **Setting Run Levels and Configuration Files**: Add your run level configurations in `inittab` with the path to the respective configuration file located in `init.d`. Then, create a symbolic link to the main application in `/usr/bin`.
-
-
 ![1](images/02.png)
 
+So as you can see:
+**`init.d` Directory**: This directory contains scripts for managing run levels. The `inittab` file specifies the configuration for these run levels.
 
+**Setting Run Levels**: Define run level configurations in `inittab`, pointing to the corresponding script in `init.d`. Finally, create a symbolic link to the main application in `/usr/bin`.
+
+**Let's begin setting up our run level:**
 ### 1. **Create and Configure the Init Script**
 
 First, create an init script in the `init.d` directory called `hello`. This script will use a switch-case to manage starting and stopping services.
