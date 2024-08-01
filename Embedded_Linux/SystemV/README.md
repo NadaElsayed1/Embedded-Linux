@@ -167,7 +167,7 @@ In the configuration menu, we will set up the following:
 
 **Now lets open the open qemu at buildroot:**
 
-![1](images/1.png)
+![1](images/01.png)
 
 ### Additional Setup
 
@@ -184,7 +184,7 @@ cd /init.d
 - **Setting Run Levels and Configuration Files**: Add your run level configurations in `inittab` with the path to the respective configuration file located in `init.d`. Then, create a symbolic link to the main application in `/usr/bin`.
 
 
-![1](images/2.png)
+![1](images/02.png)
 
 
 ### 1. **Create and Configure the Init Script**
