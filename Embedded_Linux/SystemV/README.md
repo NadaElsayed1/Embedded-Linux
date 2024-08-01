@@ -169,8 +169,6 @@ In the configuration menu, we will set up the following:
 
 ![1](images/01.png)
 
-### Additional Setup
-
 Navigate to the `/etc` directory and explore its contents:
 
 ```sh
