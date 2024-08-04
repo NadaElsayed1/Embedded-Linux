@@ -24,6 +24,7 @@ As mentioned, Buildroot has a `menuconfig` interface. In Yocto, you will find se
 | Workspace Environment| ⬇️ @ hard disk         | ⬆️                  |
 | Footprint            | ⬇️ @ target device     | ⬆️                  |
 
+
 **Notes:**
 - Yocto is an industrial tool.
 - Tesla previously used Buildroot as an auto-build tool.
