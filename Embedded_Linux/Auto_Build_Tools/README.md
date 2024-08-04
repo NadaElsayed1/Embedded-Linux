@@ -1,6 +1,6 @@
 Earlier, we built the kernel with the bootloader using a cross-compiler and compiled BusyBox using the same method. This approach saved space as the created image was smaller. However, we encountered some issues, such as dependencies during the build process.
 
-In the `../Build_from_Scratch` directory, we created our own distribution (Distro).
+In the [../Build_from_Scratch](https://github.com/NadaElsayed1/Embedded-Linux/tree/main/Embedded_Linux/Build_from_Scratch) directory, we created our own distribution (Distro).
 
 Now, in this directory, we will learn about tools that make it easier to build an image. We will provide some configurations (e.g., using `menuconfig`), then run `make`, which will handle fetching the necessary files. You will then be able to build and obtain your customized image. At this phase, we are not concerned with compilation or similar tasks.
 
