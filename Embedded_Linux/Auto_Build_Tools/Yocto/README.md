@@ -37,8 +37,275 @@ Yocto solves this by making Poky your destination. When you download it, it cont
 
 - The `dunfell` release was in 2018.
 - The `kirkstone` release was in 2020.
-- The `master` release is the newest one, but it might not yet have compatible layers.
+- The `scarthgap` release is the newest one, but it might not yet have compatible layers.
 
 ### Note:
 
 **Long-term support concept**: This means that each branch has compatible layers for a period until the next release.
+
+So, again, Poky is a reference distribution that supports compatibility and documentation to facilitate communication with OpenEmbedded, which includes BitBake and meta layers.
+
+The meta layer (metadata) contains:
+- .conf files
+- .bb files
+- .bbappend files
+- .class files
+
+Types of variables for Yocto or BitBake specifically: who reads these variables?
+
+**Local:** Anything with the following extensions:
+- .bb
+- .bbappend
+- .class
+
+**Global:** Anything with the following extension:
+- .conf
+
+**How to assign a variable:**
+```sh
+myvar="string"  # Always a string, so it should be in quotes
+```
+
+**How to read a global variable with the BitBake tool:**
+
+```sh
+bitbake-getvar  # Works with global variables
+```
+
+Let's try to set a global variable in `local.conf`:
+
+```sh
+cd yocto/poky/jetsonnano/conf
+vim local.conf
+```
+
+To set the variable:
+```sh
+myvar="5"
+```
+
+```sh
+bitbake-getvar myvar
+```
+
+### Global Variable Assignment (across all metadata, all .conf files)
+
+1. **Weak Assignment (`?=`):**
+   ```sh
+   myvar="3"
+   myvar ?= "6"
+   ```
+
+   When using `bitbake-getvar myvar`, you'll notice it prefers the normal assignment over the weak assignment. If you set the same variable name with a normal assignment at any time, it will be taken directly.
+
+   Example:
+   ```sh
+   myvar ?= "3"
+   myvar ?= "6"
+   ```
+   It will take the first one.
+
+   Example:
+   ```sh
+   myvar = "3"
+   myvar = "6"
+   ```
+   It will take the last one.
+
+2. **Weak Weak Assignment (`??=`):**
+   It will not be assigned until the end of the code. If this is the only assignment for this variable in all .conf files, it will be assigned with this assignment type, acting as a default value. Otherwise, it will not be accepted.
+
+   Example:
+   ```sh
+   myvar ??= "3"
+   myvar ?= "4"
+   ```
+   It will take "4" here.
+
+   Example:
+   ```sh
+   myvar ??= "3"
+   myvar ??= "6"
+   ```
+   It will take the last one, as is normal when it's not assigned.
+
+3. **Append:**
+   ```sh
+   myvar += "5"  # This method adds a space
+   ```
+   If `myvar` initially contains "4", it will now be "4 5".
+
+   Another way to append without a space is alphabetical append, which has lower priority:
+   ```sh
+   myvar:append = "5"
+   ```
+   Now, `myvar` is "45".
+
+   Example:
+   ```sh
+   myvar = "3"
+   myvar += "5"
+   myvar:append = "6"
+   ```
+   `myvar` would be "3 56".
+
+   Example:
+   ```sh
+   myvar = "3"
+   myvar:append = "5"
+   myvar += "6"
+   ```
+   `myvar` would be "36 5".
+
+   Example:
+   ```sh
+   myvar ??= "3"
+   myvar:append = "5"
+   myvar += "6"
+   ```
+   `myvar` would be "6 5".
+
+   Example:
+   ```sh
+   myvar ?= "3"
+   myvar:append = "5"
+   myvar += "6"
+   ```
+   `myvar` would be "36 5".
+
+   Example:
+   ```sh
+   myvar ?= "5"
+   myvar += "6"
+   myvar = "7"
+   ```
+   `myvar` would be "7".
+
+   Example:
+   ```sh
+   myvar ?= "5"
+   myvar += "6"
+   myvar ?= "7"
+   ```
+   `myvar` would be "5 6".
+
+4. **Prepend (`=+`, `:prepend`):**
+   You can write it in two ways, like append, and it has the same behavior as append:
+   ```sh
+   myvar =+ "7"
+   myvar:prepend = "7"
+   ```
+
+5. **Immediate Assignment (`:=`):**
+   ```sh
+   xar = "3"
+   myvar = "${xar}"
+   xar = "4"
+   ```
+   Now, `myvar` would be "4".
+
+   Example:
+   ```sh
+   xar = "3"
+   myvar := "${xar}"
+   xar = "4"
+   ```
+   Now, `myvar` would be "3".
+
+   Example:
+   ```sh
+   myvar = "${xar}"
+   xar = "4"
+   ```
+   Or:
+   ```sh
+   myvar := "${xar}"
+   xar = "4"
+   ```
+   Now, `myvar` would be "4".
+
+   Example:
+   ```sh
+   myvar := "${xar}"
+   xar = "4"
+   xar = "5"
+   ```
+   Now, `myvar` would be "5".
+
+6. **Append & Prepend with Dots (`.=`, `=.`) Respectively:**
+   `.= for append`, `=. for prepend` (doesn't include space)
+
+   (`+=`, `=+`), (`.=`, `=.`) have the same priority level. If they come together, priority will be detected sequentially (which comes first). `(:append, :prepend)` has the last priority.
+
+7. **Remove:**
+   Example:
+   ```sh
+   myvar= "3 5 6"
+   myvar:remove = "5"
+   myvar= "3 6"
+   ```
+
+   Example (Immediate Assignment):
+   ```sh
+   xar ??= 3
+   myvar = "${xar}"
+   xar ??= 4
+   ```
+   Now, `myvar` would be "4".
+
+   Example:
+   ```sh
+   xar ??= 3
+   myvar := "${xar}"
+   xar ??= 4
+   ```
+   Now, `myvar` would be "3".
+
+   Example:
+   ```sh
+   xar ??= 3
+   myvar := "${xar}"
+   xar = 4
+   myvar:append = "${xar}"
+   ```
+   Now, `myvar` would be "34".
+
+   Example:
+   ```sh
+   myvar := "${xar}"
+   xar = "5"
+   xar:prepend = "7"
+   myvar:append = "${xar}"
+   ```
+   Now, `myvar` would be "75".
+
+   Example:
+   ```sh
+   myvar := "${xar}"
+   xar = "5"
+   xar:prepend = "7"
+   xar =+ "9"
+   xar =. "8"
+   myvar:append = "${xar}"
+   ```
+   Now, `myvar` would be "789 5".
+
+It's important to know that when working with Yocto, you will constantly work with variables.
+
+**Note:**
+If you set a variable in a `.conf` file, it will be visible in a `.bb` file, even if it's a local area. This makes sense since `.conf` files contain global variables visible to all metadata.
+
+However, if you set a variable in a `.bb` file, it won't be visible in any other location outside of the `.bb` file.
+
+**Local Variables:**
+- `S` -> directory
+- `B` -> directory
+- `D` -> directory
+
+These are variables that hold directories (recipe).
+
+The `.bb` recipe defines how to extract the executable to run on the machine (rootfs) sequentially.
+
+So, as we previously discussed (creating a layer), start by:
+
+1. **Creating a Layer:** Outside of Poky and anything related to OpenEmbedded, consider third-party layers.
