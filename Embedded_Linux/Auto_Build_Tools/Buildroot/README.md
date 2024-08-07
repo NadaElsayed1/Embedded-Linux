@@ -228,11 +228,11 @@ make
 ![1](images/11.png)
 
 
-### 8. Verify the Build
+### 10. Verify the Build
 
 After building, verify that `DemoApp` is included in the root filesystem by running the built image on your target hardware or in an emulator.
 
-### 9. Testing
+### 11. Testing
 
 Boot your device or emulator with the new root filesystem. To test `DemoApp`, execute the following command:
 
