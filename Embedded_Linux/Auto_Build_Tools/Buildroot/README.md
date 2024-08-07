@@ -228,10 +228,19 @@ make
 ![1](images/11.png)
 
 
-### 10. Run the System with QEMU
+### 8. Verify the Build
 
-To run the system using QEMU, use the `./start-qemu` script provided by Buildroot. This script will start a QEMU virtual machine with the generated root filesystem:
+After building, verify that `DemoApp` is included in the root filesystem by running the built image on your target hardware or in an emulator.
+
+### 9. Testing
+
+Boot your device or emulator with the new root filesystem. To test `DemoApp`, execute the following command:
 
 ```sh
-./start-qemu.sh
+/usr/bin/demoapp
 ```
+
+You should see "Hello" printed three times.
+
+![DemoApp Output](images/12.png)
+
