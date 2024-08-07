@@ -116,58 +116,7 @@ while Unix uses SystemV
 Now lets set up a new runlevel in Buildroot and configure it to run a script (`hello`) that starts a program (`hello.py`), follow these steps:
 
 **First we need to setup and Configure Buildroot**
-
-### Download Required Libraries
-
-To begin, install the necessary libraries and tools:
-
-```sh
-sudo apt install sed make binutils gcc g++ bash patch \
-gzip bzip2 perl tar cpio python unzip rsync wget libncurses-dev
-```
-
-### Download Buildroot
-
-Clone the Buildroot repository:
-
-```sh
-git clone https://github.com/buildroot/buildroot.git
-cd buildroot
-```
-
-### Configure Buildroot
-
-```sh
-make menuconfig
-```
-
-In the configuration menu, we will set up the following:
-
-- **Init Process**: Choose between System V, systemd, or BusyBox init.
-
-  - If using systemd, remember to increase the root filesystem size in the Buildroot configuration.
-  here i chose `systemV` @ system configuration
-
-  ![1](images/17.png)
-
-  - @ Interpreter languages and scripting
-  i chose `python3`
-
-  ![1](images/18.png)
-
-  - @ Shell and utilities
-  i chose `bash`
-
-  ![1](images/19.png)
-
-  - @ Text editors and viewers
-  i chose `nano` and `vim`
-
-  ![1](images/20.png)
-
-**Now lets open the open qemu at buildroot:**
-
-![1](images/01.png)
+you can find that [here](https://github.com/NadaElsayed1/Embedded-Linux/blob/main/Embedded_Linux/Auto_Build_Tools/Buildroot/README.md)
 
 Navigate to the `/etc` directory and explore its contents:
 
