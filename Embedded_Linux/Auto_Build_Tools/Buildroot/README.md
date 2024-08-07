@@ -120,7 +120,7 @@ To compile `DemoApp`, create a Makefile that defines how to build the applicatio
 TARGET = demoapp
 
 # Define the source files
-SRCS = DemoApp.c
+SRCS = demoapp.c
 
 # Compiler and flags
 CC = gcc
@@ -129,12 +129,12 @@ LDFLAGS = -lpthread
 
 # Default rule to build the target
 $(TARGET): $(SRCS)
-	$(CC) $(CFLAGS) $(LDFLAGS) $(SRCS) -o $(TARGET)
+        $(CC) $(CFLAGS) $(LDFLAGS) $(SRCS) -o $(TARGET)
 
 # Clean rule to remove built files
 .PHONY: clean
 clean:
-	-rm -f $(TARGET)
+        -rm -f $(TARGET)
 ```
 ![1](images/3.png)
 
@@ -168,16 +168,16 @@ The `demoapp.mk` file contains the build instructions for your package. It defin
 ################################################################################
 
 DEMOAPP_VERSION = 1.0
-DEMOAPP_SITE = $(TOPDIR)/package/demoapp/src
+DEMOAPP_SITE = $(TOPDIR)/package/demoapp
 DEMOAPP_SITE_METHOD = local
 
 # Specify that we are using a custom Makefile
 define DEMOAPP_BUILD_CMDS
-	$(MAKE) -C $(@D) CC="$(TARGET_CC)" CFLAGS="$(TARGET_CFLAGS)" LDFLAGS="$(TARGET_LDFLAGS)"
+        $(MAKE) -C $(DEMOAPP_SITE) CC="$(TARGET_CC)" CFLAGS="$(TARGET_CFLAGS)" LDFLAGS="$(TARGET_LDFLAGS)"
 endef
 
 define DEMOAPP_INSTALL_TARGET_CMDS
-	$(INSTALL) -D -m 0755 $(@D)/demoapp $(TARGET_DIR)/usr/bin/demoapp
+        $(INSTALL) -D -m 0755 $(DEMOAPP_SITE)/demoapp $(TARGET_DIR)/usr/bin/demoapp
 endef
 
 # Register the package with Buildroot
