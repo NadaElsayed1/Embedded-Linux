@@ -233,5 +233,5 @@ make
 To run the system using QEMU, use the `./start-qemu` script provided by Buildroot. This script will start a QEMU virtual machine with the generated root filesystem:
 
 ```sh
-./start-qemu
+./start-qemu.sh
 ```
