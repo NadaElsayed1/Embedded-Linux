@@ -304,8 +304,6 @@ However, if you set a variable in a `.bb` file, it won't be visible in any other
 
 These are variables that hold directories (recipe).
 
-The `.bb` recipe defines how to extract the executable to run on the machine (rootfs) sequentially.
-
-So, as we previously discussed (creating a layer), start by:
-
-1. **Creating a Layer:** Outside of Poky and anything related to OpenEmbedded, consider third-party layers.
+so to understand local variables we need to create a recipe you can find it here
+as local variable applies on recipes
+so to see them we need to create `.bb` file which is the recipe itself
