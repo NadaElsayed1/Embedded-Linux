@@ -2,12 +2,12 @@ So, we've already discussed variable assignment and types, and we've used some B
 
 Now, we need to talk more about recipes. As we mentioned previously (when we talk about recipes, we refer to files with the `.bb` extension), let's dive into the content of a recipe and how to write it.
 
-1. Recipe Headers:
+**1. Recipe Headers:**
 
 - **Documentation**: Considered a local variable.
 - **Description**: Considered a local variable.
 
-2. LICENSE:
+**2. LICENSE:**
 
 When you create a recipe, you should specify which license the recipe is based on. 
 
@@ -86,7 +86,7 @@ If you don't want to do all that, you can set:
 LICENSE = "CLOSED"
 ```
 
-3. SRC_URI:
+**3. SRC_URI:**
 
 This local variable is responsible for cloning files to the `dl` directory (downloads) as mentioned earlier in "Creating Layer," and it uses `<schema>` related to file location.
 
@@ -106,7 +106,7 @@ SRC_URI = "file://<file_name>"
 But be aware that this file should be in a specific place, which we'll explain later.
 
 
-4. SRCREV:
+**4. SRCREV:**
 
 This is used only with Git and is used to checkout a specific commit hash.  
 As each commit is created, a hash is generated for it as well.
