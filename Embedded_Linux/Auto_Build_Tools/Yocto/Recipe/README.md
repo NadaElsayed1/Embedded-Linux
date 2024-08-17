@@ -59,11 +59,11 @@ md5sum ../meta/files/common-licenses/MIT  # To get the checksum
 
 ### Applying the License:
 
+so we will edit on our previous recipe or you can do a new one
+
 ```sh
-mkdir RecipeLicense  # @home for testing
-cd RecipeLicense
-touch myrecipe.bb
-nano myrecipe.bb
+cd /home/nada/yocto/meta-nada/nada-recipes
+nano nadaRecipe_0.1.bb
 ```
 
 Write the following in the recipe file:
