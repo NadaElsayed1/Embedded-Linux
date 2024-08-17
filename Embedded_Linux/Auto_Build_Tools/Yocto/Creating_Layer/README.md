@@ -247,7 +247,7 @@ Alternatively, you can define it in your `layer.conf` file if you want it to be 
 
 ```sh
 # Inside layer.conf
-BB_ENV_EXTRAWHITE += "BANNER_VARIABLE"
+BB_ENV_PASSTHROUGH_ADDITIONS += "BANNER_VARIABLE"
 ```
 
 ![1](images/20.png)
