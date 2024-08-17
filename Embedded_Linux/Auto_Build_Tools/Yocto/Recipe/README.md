@@ -233,9 +233,8 @@ Next, set the following:
 
 **`do_compile()`**:
 
-- `cmake -S ${S} -B ${B}`: Configures the project by generating the necessary build files in the build directory `${B}`. The `-S` flag specifies the source directory, while the `-B` flag specifies the build directory.
-
-- `cmake --build ${B}`: Builds the project using the generated files in the build directory `${B}`. This command compiles the code according to the configuration set in the previous step.
+- In Yocto, oe_runmake is a helper function used in recipes to invoke make commands during the build process. It ensures that make is called in a consistent environment
+- so here make or cmake only would run correct
 
 **`do_install()`**:
 
@@ -246,32 +245,44 @@ Next, set the following:
 **Recipe Example:**
 
 ```sh
-# Recipe Header Section
+## HEADER SECTION
 SUMMARY = "Demo App Recipe"
 DESCRIPTION = "This recipe clones and builds the demo app"
 
 LICENSE = "MIT"
-LIC_FILES_CHKSUM = "file://${COREBASE}/meta/files/common-licenses/MIT;md5=0835ade698e0bcf8506ecda2f7b4f302"
+LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/MIT;md5=0835ade698e0bcf8506ecda2f7b4f302"
 
 SRC_URI = "git://github.com/FadyKhalil/DemoApp.git;protocol=https;branch=main"
 
 SRCREV = "720c663c5fd7246b4b42c5205d74db7d9784b5b2"
 
-# Source directory after fetching
-S = "${WORKDIR}/git"
+# Where the source files will be located after fetching
 
+S = "${WORKDIR}/git"
 DEPENDS = "cmake"
 
 inherit cmake
 
+S = "${WORKDIR}/git"
+B = "${WORKDIR}/build"
+D = "${WORKDIR}/image"
+
+do_configure(){
+  #This ensures that CMake is properly configured to produce the desired output, with static linking as specified.
+  #-DCMAKE_EXE_LINKER_FLAGS="-static": Sets the linker flags for executables to be statically linked.
+  #-DCMAKE_SHARED_LINKER_FLAGS="-static": Sets the linker flags for shared libraries to be statically linked.
+  cmake -S ${S} -B ${B} -DCMAKE_EXE_LINKER_FLAGS="-static" -DCMAKE_SHARED_LINKER_FLAGS="-static"
+}
+
 do_compile() {
-    # Source directory is ${S}, build directory is ${B}
-    cmake -S ${S} -B ${B}  
-    cmake --build ${B}
+    #In Yocto, oe_runmake is a helper function used in recipes to invoke make commands during the build process. It ensures that make is called in a consistent environment
+    #so here make or cmake only would run correct
+    oe_runmake -C ${B}
 }
 
 do_install() {
     # Create the destination directory for binaries
+    # bindir -> /usr/bin
     install -d ${D}${bindir}  
 
     # Install the compiled binary
@@ -279,8 +290,36 @@ do_install() {
 }
 ```
 
+![1](images/28.png)
+
+
 **Building and Installing**
 
 ![1](images/26.png)
 ![1](images/27.png)
+![1](images/31.png)
 
+
+Now you need to understand an important file called `documentation.conf`:
+```sh
+cd ~/poky/meta/conf/documentation.conf
+```
+
+![1](images/29.png)
+
+This file contains a simple description of all tasks and variables. However, I couldn't find the binary files here.
+
+For reference: to run a specific task, such as `do_cleanall()`, you should write:
+```sh
+# In the build directory of Poky
+# Add the task name only without "do"
+bitbake -c cleanall <recipe_name>
+```
+
+Another file you should be aware of is `bitbake.conf` in the same directory.
+
+This file defines the "standard target filesystem paths," which indicates where all files will be downloaded to in the root filesystem generally.
+
+![1](images/30.png)
+
+To edit global variables, you can find them in `local.conf`, `distro.conf`, and `layer.conf`. Note: Do not edit any local variables directly, as changes will affect all recipes. If you need to make adjustments, consider appending changes instead.
