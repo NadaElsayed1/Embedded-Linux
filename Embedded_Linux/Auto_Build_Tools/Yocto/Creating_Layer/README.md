@@ -146,32 +146,33 @@ BBFILES:append = " ${LAYERDIR}/nada-*/*.bb" # keep a space after the double quot
 
 ![1](images/14.png)
 
-Now we add a new hierarchy.
 
-Run this recipe by:
+Now, let’s add a new hierarchy.
+
+Run this recipe using:
 `bitbake nadaRecipe`
 
-This means bitbake takes input (.bb file). It parses `.conf` first to locate all your recipes.
+This means that BitBake will take the input (.bb file) and first parse the `.conf` file to locate all your recipes.
 
-It will give an error `Nothing PROVIDES nadaRecipe_0.1`:
+It will give an error: `Nothing PROVIDES nadaRecipe_0.1`
 
-You should add your layer in `BBlayers.conf` to include all layers you want in your build system.
+You should add your layer to `bblayers.conf` to include all the layers you want in your build system.
 
-Shown here:
+As shown here:
 
 ![1](images/14.png)
 
-Edit `bblayer.conf` and add your "absolute path":
+Edit `bblayers.conf` and add your "absolute path":
 
 ```sh
-vim bblayer.conf
+vim bblayers.conf
 ```
 
 or
 
 ```sh
 cd ~/poky/build
-bitbake-layers add-layer ~/yocto/meta-nada/ # can add relative path here
+bitbake-layers add-layer ~/yocto/meta-nada/ # You can add a relative path here
 ```
 
 Check its existence:
@@ -182,6 +183,99 @@ bitbake-layers show-layers
 
 ![1](images/16.png)
 
-Now, let's run our recipe again:
 
-![1](images/17.png)
+Now, let’s write a simple Python app by editing the `display_banner` function. If the variable equals 1, display "hi"; otherwise, if the variable equals 2, display "hello". Then, create a variable in `layer.conf` to check it in the recipe and test it.
+
+First, we need to update our recipe’s `display_banner` function:
+
+Start by adding this line:
+`banner_variable = d.getVar('BANNER_VARIABLE', True)`
+
+`d` is an instance of the BitBakeData class, which provides access to various variables and functions within the BitBake environment. In BitBake, `d` refers to `bb.data`.
+
+Using the `getVar` method, `BANNER_VARIABLE` is passed as a string to `getVar` to specify which variable’s value we are interested in.
+
+Finally:
+- **True**:
+  - This argument is a flag that tells `getVar` whether to expand the variable value.
+  - When `True`, BitBake will perform variable expansion on the value of `BANNER_VARIABLE`, substituting any other variables within its value with their actual values.
+  - If `False`, the method returns the raw value of the variable without expansion.
+
+Next, change the recipe name to `nada_0.1.bb`.
+
+![1](images/21.png)
+
+Here’s how to write that:
+
+```sh
+python do_display_banner() {
+    import bb
+    import os
+
+    # Fetch the variable from the environment
+    banner_variable = d.getVar('BANNER_VARIABLE', True)
+    
+    if banner_variable == "1":
+        bb.plain("***********************************************")
+        bb.plain("*                                             *")
+        bb.plain("*                  hi                       *")
+        bb.plain("*                                             *")
+        bb.plain("***********************************************")
+    elif banner_variable == "2":
+        bb.plain("***********************************************")
+        bb.plain("*                                             *")
+        bb.plain("*                hello                       *")
+        bb.plain("*                                             *")
+        bb.plain("***********************************************")
+    else:
+        bb.plain("***********************************************")
+        bb.plain("*                                             *")
+        bb.plain("*           Default banner message            *")
+        bb.plain("*                                             *")
+        bb.plain("***********************************************")
+}
+```
+
+You can define `BANNER_VARIABLE` in your `layer.conf` or in your recipe file. For simplicity, you might add it to your recipe file:
+
+```sh
+BANNER_VARIABLE = "1"  # Set this to 1, 2, or any other value you want to test
+```
+
+Alternatively, define it in your `layer.conf` file if you want it to be more global:
+
+```sh
+# Inside layer.conf
+BB_ENV_PASSTHROUGH_ADDITIONS += "BANNER_VARIABLE"
+```
+
+![1](images/20.png)
+![1](images/19.png)
+
+Then, set the variable in your `local.conf`:
+
+```sh
+BANNER_VARIABLE = "1"  # or "2" depending on what you want to test
+```
+
+![1](images/18.png)
+
+Now, check the variable in your recipe.
+
+![1](images/22.png)
+
+Next, change `BANNER_VARIABLE` to `2`.
+
+![1](images/23.png)
+
+Check the variable in your recipe again.
+
+![1](images/25.png)
+
+Finally, change `BANNER_VARIABLE` to `3`.
+
+![1](images/24.png)
+
+Check the variable in your recipe one more time.
+
+![1](images/26.png)
