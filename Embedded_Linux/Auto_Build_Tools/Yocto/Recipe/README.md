@@ -86,6 +86,7 @@ If you don't want to do all that, you can set:
 LICENSE = "CLOSED"
 ```
 
+## Development section
 ## 3. SRC_URI:
 
 This local variable is responsible for cloning files to the `dl` directory (downloads) as mentioned earlier in "Creating Layer," and it uses `<schema>` related to file location.
@@ -110,6 +111,17 @@ But be aware that this file should be in a specific place, which we'll explain l
 
 This is used only with Git and is used to checkout a specific commit hash.  
 As each commit is created, a hash is generated for it as well.
+
+tasks flow for recipe:
+1. do_fetch() task calls SRC_URI to fetch from (ex. github) to dl directory
+2. do_unpack() task happened at working directory (WORKDIR) 
+3. do_patch()
+4. do_configure() here you use bash commands (bash shell) or any commands under /usr/bin dir
+or by using `python do_configure` you can write python commnds inside it (python shell)
+5. do_compile()
+6. finally do_install()
+
+if you don't implement them bitbake apply a defualt implementation for them
 
 **Note**:  
 There are other local variables hidden in each recipe, like:
@@ -225,7 +237,7 @@ First, update the source directory where the application will be unpacked using 
 
 Next, set the following:
 
-- **DEPENDS**: Indicates that the recipe depends on CMake, so it will be available during the build.
+- **DEPENDS**: Indicates that the recipe depends on CMake, so it will be available during the build as we said before that yocto create its own environment it doesn't use any thing from my host machine
 
 - **inherit cmake**: Inherits the CMake class, which provides common CMake build functionality. This is necessary because it automates the configuration and build process using CMake, saving you from manually setting up these steps.
 
