@@ -179,9 +179,22 @@ This command initiates the build process for your image, integrating all specifi
 
 After the build completes, you can find the generated image files in the `tmp-glibc/deploy/images/raspberrypi3-64/` directory. Flash the `rpi-sdimg` file to an SD card and insert it into your Raspberry Pi.
 
+![1](images/3.png)
+
 ## 7. Verifying the Image
 
 Power on your Raspberry Pi with the new SD card. Verify that your custom application `pingled` is functioning correctly by checking if it pings the host machine and controls the LED as expected.
+ 
+so first you have to put your image on sdcard:
 
-![1](images/3.png)
+```sh
+sudo dd if=/home/nada/poky/build/tmp-glibc/deploy/images/raspberrypi3-64/core-image-minimal-raspberrypi3-64-20240828053529.rootfs.rpi-sdimg of=/dev/mmcblk0 bs=1M
+```
 
+then run:
+```sh
+sudo picocom -b 115200 /dev/ttyUSB0
+root
+cd /
+ping_led.sh
+```
