@@ -10,3 +10,5 @@ do_install() {
     install -d ${D}${bindir}
     install -m 0755 ${WORKDIR}/ping_led.sh ${D}${bindir}/ping_led.sh
 }
+
+
